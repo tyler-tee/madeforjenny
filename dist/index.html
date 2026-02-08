@@ -932,7 +932,7 @@
       const gallery = document.getElementById('galleryScroll');
 
       try {
-        const res = await fetch(R2_BASE_URL + '/wedding/manifest.json');
+        const res = await fetch(R2_BASE_URL + '/manifest.json');
         if (!res.ok) throw new Error('manifest fetch failed');
         const manifest = await res.json();
 
