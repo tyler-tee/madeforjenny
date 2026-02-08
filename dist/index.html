@@ -468,6 +468,118 @@
       border-radius: 12px;
     }
 
+    /* ============ VIDEO ENVELOPE OVERLAY ============ */
+    .youtube-embed {
+      position: relative;
+    }
+
+    .youtube-embed #song-video-player {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .youtube-embed #song-video-player iframe {
+      border-radius: 12px;
+    }
+
+    .video-envelope-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--cream);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: opacity 0.5s ease, pointer-events 0s;
+    }
+
+    .video-envelope-overlay.opening {
+      pointer-events: none;
+    }
+
+    .video-envelope-overlay.opening .envelope-flap {
+      transform: rotateX(-180deg);
+      transition: transform 0.6s ease;
+    }
+
+    .video-envelope-overlay.opening .envelope-text,
+    .video-envelope-overlay.opening .envelope-body {
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .video-envelope-overlay.opened {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+
+    .envelope-wrapper {
+      position: relative;
+      width: 200px;
+      height: 140px;
+      animation: envelopeFloat 2.5s ease-in-out infinite;
+      perspective: 400px;
+    }
+
+    @keyframes envelopeFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .envelope-body {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 100px;
+      background: white;
+      border: 2.5px solid var(--deep-rose);
+      border-radius: 2px 2px 4px 4px;
+      box-shadow: 0 4px 20px var(--shadow);
+      transition: opacity 0.3s ease;
+    }
+
+    .envelope-flap {
+      position: absolute;
+      top: 0;
+      left: -2px;
+      right: -2px;
+      height: 70px;
+      background: linear-gradient(180deg, #fafafa 0%, white 100%);
+      border: 2.5px solid var(--deep-rose);
+      border-bottom: none;
+      border-radius: 4px 4px 0 0;
+      transform-origin: top center;
+      transition: transform 0.6s ease;
+      box-shadow: 0 -2px 8px var(--shadow);
+      backface-visibility: visible;
+    }
+
+    .envelope-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Caveat', cursive;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--deep-rose);
+      text-align: center;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .video-envelope-overlay:hover .envelope-wrapper {
+      animation: none;
+      transform: scale(1.05);
+      transition: transform 0.2s ease;
+    }
+
     /* ============ OUR STORY TIMELINE ============ */
     .story-section {
       padding: 5rem 1.5rem;
@@ -651,7 +763,7 @@
     <p class="subtitle">a little something, made with love & questionable HTML</p>
     <span class="date-badge">Married since January 29th, 2024</span>
 
-    <div class="scroll-hint">scroll down, babe &#8595;</div>
+    <div class="scroll-hint">scroll down, boo &#8595;</div>
   </section>
 
   <!-- ============ LOVE LETTER ============ -->
@@ -768,11 +880,14 @@
     <p class="song-artist">James Morrison</p>
     <p style="font-family:'Gaegu',cursive; font-size:1.15rem; color:var(--dusty-rose); margin-bottom:2rem;">our song &#10084;</p>
     <div class="youtube-embed">
-      <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/o7L_PYzkxEc?autoplay=1"
-        title="YouTube video player" frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
-      </iframe>
+      <div class="video-envelope-overlay" id="videoEnvelopeOverlay" title="Click to open">
+        <div class="envelope-wrapper">
+          <div class="envelope-flap"></div>
+          <div class="envelope-body"></div>
+          <p class="envelope-text">Open Your Valentine</p>
+        </div>
+      </div>
+      <div id="song-video-player"></div>
     </div>
   </section>
 
@@ -821,7 +936,48 @@
     <p class="small">madeforjennywith.love</p>
   </footer>
 
+  <script src="https://www.youtube.com/iframe_api" async></script>
   <script>
+    // ============ YOUTUBE PLAYER (envelope overlay) ============
+    var songVideoPlayer = null;
+    var envelopeOpenedByUser = false;
+
+    function onYouTubeIframeAPIReady() {
+      songVideoPlayer = new YT.Player('song-video-player', {
+        height: '100%',
+        width: '100%',
+        videoId: 'o7L_PYzkxEc',
+        playerVars: {
+          enablejsapi: 1,
+          origin: window.location.origin
+        },
+        events: {}
+      });
+      if (envelopeOpenedByUser && songVideoPlayer.unMute && songVideoPlayer.playVideo) {
+        songVideoPlayer.unMute();
+        songVideoPlayer.playVideo();
+      }
+    }
+
+    (function initEnvelopeOverlay() {
+      var overlay = document.getElementById('videoEnvelopeOverlay');
+      if (!overlay) return;
+
+      overlay.addEventListener('click', function openEnvelope() {
+        overlay.classList.add('opening');
+        envelopeOpenedByUser = true;
+
+        if (songVideoPlayer && songVideoPlayer.playVideo && songVideoPlayer.unMute) {
+          songVideoPlayer.unMute();
+          songVideoPlayer.playVideo();
+        }
+
+        setTimeout(function() {
+          overlay.classList.add('opened');
+        }, 700);
+      });
+    })();
+
     // ============ FLOATING HEARTS ============
     const heartsContainer = document.getElementById('doodleHearts');
     const heartSymbols = ['&#10084;', '&#10085;', '&#9825;', '&#10083;'];
