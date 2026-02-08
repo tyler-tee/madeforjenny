@@ -468,7 +468,7 @@
       border-radius: 12px;
     }
 
-    /* ============ VIDEO ENVELOPE OVERLAY ============ */
+    /* ============ ENTRANCE ENVELOPE (full-page) ============ */
     .youtube-embed {
       position: relative;
     }
@@ -485,14 +485,13 @@
     }
 
     .video-envelope-overlay {
-      position: absolute;
+      position: fixed;
       inset: 0;
-      z-index: 10;
+      z-index: 10001;
       display: flex;
       align-items: center;
       justify-content: center;
       background: var(--cream);
-      border-radius: 12px;
       cursor: pointer;
       transition: opacity 0.5s ease, pointer-events 0s;
     }
@@ -520,8 +519,8 @@
 
     .envelope-wrapper {
       position: relative;
-      width: 200px;
-      height: 140px;
+      width: 240px;
+      height: 168px;
       animation: envelopeFloat 2.5s ease-in-out infinite;
       perspective: 400px;
     }
@@ -536,7 +535,7 @@
       bottom: 0;
       left: 0;
       right: 0;
-      height: 100px;
+      height: 120px;
       background: white;
       border: 2.5px solid var(--deep-rose);
       border-radius: 2px 2px 4px 4px;
@@ -549,7 +548,7 @@
       top: 0;
       left: -2px;
       right: -2px;
-      height: 70px;
+      height: 84px;
       background: linear-gradient(180deg, #fafafa 0%, white 100%);
       border: 2.5px solid var(--deep-rose);
       border-bottom: none;
@@ -566,7 +565,7 @@
       left: 50%;
       transform: translate(-50%, -50%);
       font-family: 'Caveat', cursive;
-      font-size: 1.75rem;
+      font-size: 2.1rem;
       font-weight: 700;
       color: var(--deep-rose);
       text-align: center;
@@ -746,6 +745,15 @@
   <!-- Floating doodle hearts background -->
   <div class="doodle-hearts" id="doodleHearts"></div>
 
+  <!-- ============ ENTRANCE ENVELOPE (open to reveal site + start video) ============ -->
+  <div class="video-envelope-overlay" id="videoEnvelopeOverlay" title="Click to open your valentine">
+    <div class="envelope-wrapper">
+      <div class="envelope-flap"></div>
+      <div class="envelope-body"></div>
+      <p class="envelope-text">Open Your Valentine</p>
+    </div>
+  </div>
+
   <!-- ============ HERO ============ -->
   <section class="hero">
     <svg class="hero-envelope" viewBox="0 0 120 90" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -880,13 +888,6 @@
     <p class="song-artist">James Morrison</p>
     <p style="font-family:'Gaegu',cursive; font-size:1.15rem; color:var(--dusty-rose); margin-bottom:2rem;">our song &#10084;</p>
     <div class="youtube-embed">
-      <div class="video-envelope-overlay" id="videoEnvelopeOverlay" title="Click to open">
-        <div class="envelope-wrapper">
-          <div class="envelope-flap"></div>
-          <div class="envelope-body"></div>
-          <p class="envelope-text">Open Your Valentine</p>
-        </div>
-      </div>
       <div id="song-video-player"></div>
     </div>
   </section>
